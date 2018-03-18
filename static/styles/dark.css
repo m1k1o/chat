@@ -1,0 +1,28 @@
+/* Dark Theme */
+.message {
+	background: #2f2a2a !important;
+	color: white;
+}
+
+body, a,
+.prefix, .prefix strong,
+#users li, #users li strong,
+.chat-form .form-control{
+	color: white !important;
+}
+
+body,
+.chat-form,
+.chat-form .form-control {
+	background: #1f1b1b;
+}
+
+#send,
+.chat-form .form-control,
+#emic{
+	border-color: #7f3f98;
+}
+
+#emic_btn{
+	background:#7f3f98;
+}
