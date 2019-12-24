@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/m1k1o/chat#readme",
   "dependencies": {
+    "express": "^4.17.1",
     "socket.io": "*"
   }
 }
