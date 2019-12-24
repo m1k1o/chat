@@ -23,7 +23,7 @@ var Emic = {
 	container: document.getElementById("emic"),
 	textarea: document.getElementById("form_input"),
 	emic_btn: document.getElementById("emic_btn"),
-	
+
 	db: {
 		"grinning-face": "Grinning Face",
 		"grinning-face-with-smiling-eyes": "Grinning Face With Smiling Eyes",
@@ -127,13 +127,13 @@ var Emic = {
 		"avocado": "Avocado",
 		"banana": "Banana"
 	},
-	
+
 	replace: function(str){
 		str = ' ' + str;
-		
+
 		str = str.replace(/\*dog\*/g, '<img src="static/images/dog.png" width="128px" height="128px" style="vertical-align:middle;">');
 		str = str.replace(/\*bender\*/g, '<img src="static/images/bender.png" width="128px" height="182px" style="vertical-align:middle;">');
-		
+
 		str = str.replace(/ [O|o]:-?\)+/g, ' *smiling-face-with-halo* ');                             // O:)
 		str = str.replace(/ \>:-?\)+/g, ' *smiling-face-with-horns* ');                               // >:)
 		str = str.replace(/ \>:-?\(+/g, ' *imp* ');                                                   // >:(
@@ -166,12 +166,12 @@ var Emic = {
 		str = str.replace(/ c-?:/g, ' *smiling-cat-face-with-open-mouth* ');                          // c:
 		str = str.replace(/ :-?3+/g, ' *grinning-cat-face-with-smiling-eyes* ');                      // :3
 		str = str.replace(/ [Hh]mm[m]+/g, ' *thinking-face* ');                                       // Hmmm
-		
+
 		str = str.replace(/\*([a-z0-9-]+)\*/g, '<img src="static/emic/$1.png" width="28px" height="28px" style="vertical-align:middle;">');
-		
+
 		return str;
 	},
-	
+
 	init: function(){
 		for(var slug in Emic.db){
 			var obj = document.createElement('li');
@@ -181,13 +181,13 @@ var Emic = {
 				Emic.textarea.insertAtCaret(' *' + this.dataset.slug + '* ');
 				Emic.textarea.focus();
 			};
-			
+
 			Emic.container.onmousedown = function(e){
 				e.preventDefault();
 			};
 			Emic.container.appendChild(obj);
 		}
-		
+
 		var toggle = Emic.container.style.display;
 		Emic.emic_btn.onclick = function(){
 			if(toggle == "none"){
