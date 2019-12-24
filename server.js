@@ -1,13 +1,17 @@
-var port = process.argv[2] || 8090;
-var http = require("http").createServer();
-var io = require("socket.io")(http);
+const express = require('express')
+const app = express()
+app.use(express.static(__dirname))
+
+const port = process.argv[2] || 8090;
+const http = require("http").Server(app)
+const io = require("socket.io")(http);
 
 http.listen(port, function () {
   console.log("Starting server on port %s", port);
 });
 
-var users = [];
-var msg_id = 1;
+const users = [];
+let msg_id = 1;
 io.sockets.on("connection", function(socket) {
 	console.log("New connection!");
 	
