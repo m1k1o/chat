@@ -441,15 +441,16 @@ var Chat = {
 
 			var files = e.dataTransfer.files; // Array of all files
 			for(var i = 0, file; files[i]; i++){
+				var file = files[i];
+
 				// Max 10 MB
-				if(files[i].size > 10485760){
+				if(file.size > 10485760){
 					alert("Max size of file is 10MB");
 					return ;
 				}
 
-				var file = files[i];
 				var reader = new FileReader();
-				reader.onload = function(e2) { // finished reading file data.
+				reader.onload = (function(file){ return function(e2){
 					// Image
 					if(file.type.match(/image.*/)){
 						Chat.send_msg('<img src="' + e2.target.result + '" style="max-width:100%;">');
@@ -470,7 +471,7 @@ var Chat = {
 
 					// Default
 					Chat.send_msg('<a href="' + e2.target.result + '" download="' + file.name + '">' + file.name + '</a>');
-				}
+				}; })(file);
 				reader.readAsDataURL(file); // start reading the file data.
 			}
 		});
