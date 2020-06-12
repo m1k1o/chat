@@ -200,5 +200,3 @@ var Emic = {
 		};
 	}
 };
-
-Emic.init();

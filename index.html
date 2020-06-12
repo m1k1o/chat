@@ -26,11 +26,12 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="static/scripts/socket.io.min.js"></script>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="static/scripts/emic.js"></script>
 	<script type="text/javascript" src="static/scripts/chat.js"></script>
 	<script type="text/javascript">
-		Chat.init("ws://");
+		Emic.init();
+		Chat.init();
 	</script>
 </body>
 </html>

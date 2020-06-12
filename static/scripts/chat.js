@@ -20,20 +20,6 @@ var Chat = {
 		window.scrollTo(0, document.body.scrollHeight);
 	},
 
-	query: function(variable){
-		var query = window.location.search.substring(1);
-		var vars = query.split("&");
-
-		for(var i = 0; i < vars.length; i++){
-			var pair = vars[i].split("=");
-			if (pair[0] == variable) {
-				return pair[1];
-			}
-		}
-
-		return false;
-	},
-
 	notif: {
 		enabled: true,
 
@@ -370,11 +356,12 @@ var Chat = {
 		Chat.users.innerHTML = '';
 	},
 
-	init: function(server){
+	init: function(){
 		// Set green favicon
 		Chat.notif.favicon('red');
 
-		Chat.socket = io.connect(Chat.query("ip") || server);
+		// Connect to socket.io
+		Chat.socket = io();
 
 		// Create beep object
 		Chat.notif.beep = Chat.notif.beep_create();
