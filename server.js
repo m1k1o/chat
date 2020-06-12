@@ -54,14 +54,6 @@ io.sockets.on("connection", function(socket) {
 	});
 
 	socket.on("send-msg", function(data){
-		// Trim string
-		data.m = data.m.trim();
-
-		// Ignore empty messages
-		if(data.m == ""){
-			return ;
-		}
-
 		// If is logged in
 		if(nick == null){
 			socket.emit("force-login", "You need to be logged in to send message.");

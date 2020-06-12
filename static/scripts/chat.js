@@ -17,7 +17,9 @@ var Chat = {
 	new_title: "New messages...",
 
 	scroll: function(){
-		window.scrollTo(0, document.body.scrollHeight);
+		setTimeout(function(){
+			window.scrollTo(0, document.body.scrollHeight);
+		}, 0)
 	},
 
 	notif: {
@@ -147,9 +149,12 @@ var Chat = {
 	},
 
 	send_event: function(){
+		var value = Chat.textarea.value.trim();
+		if(value == "") return ;
+
 		console.log("Send message.");
 
-		Chat.send_msg(Chat.textarea.value);
+		Chat.send_msg({ text: value });
 
 		Chat.textarea.value = '';
 		Chat.typing.update();
@@ -164,7 +169,7 @@ var Chat = {
 
 			var prefix = document.createElement('span');
 			prefix.className = 'prefix';
-			prefix.innerHTML = nick;
+			prefix.innerText = nick;
 			li.appendChild(prefix);
 
 			var msg = document.createElement('div');
@@ -223,7 +228,7 @@ var Chat = {
 
 		var prefix = document.createElement('span');
 		prefix.className = 'prefix';
-		prefix.innerHTML = r.f;
+		prefix.innerText = r.f;
 		li.appendChild(prefix);
 
 		if(Chat.last_sent_nick === r.f){
@@ -238,7 +243,7 @@ var Chat = {
 
 		var body = document.createElement('span');
 		body.className = 'body' + (localStorage.nick == r.f ? ' out' : ' in');
-		body.innerHTML = Chat.parse_msg(r.m);
+		Chat.append_msg(body, r.m);
 
 		msg.appendChild(body);
 
@@ -253,18 +258,76 @@ var Chat = {
 		Chat.scroll();
 	},
 
-	parse_msg: function(text){
-		// Parse urls
-		var new_text = text.replace(/(https?:\/\/[^\s]+)/g, function(link, a, b) {
-			// If is image
-			if(link.match(/.(png|jpe?g|gifv?)([?#].*)?$/g)){
-				return '<a href="' + link + '" target="_blank"><img src="' + link + '" style="max-width:100%;" /></a>';
+	append_msg: function(el, msg){
+		if(!msg) return ;
+
+		// If is object
+		if(typeof msg.text !== 'undefined'){
+			// Escape HTML
+			el.innerText = msg.text;
+			var text = el.innerHTML;
+
+			// Parse urls
+			text = text.replace(/(https?:\/\/[^\s]+)/g, function(url, a, b) {
+				var link = document.createElement('a');
+				link.target = "_blank";
+
+				// Un-escape
+				link.innerHTML = url;
+				url = link.innerText;
+				link.href = url;
+
+				// If link is image
+				if(url.match(/.(png|jpe?g|gifv?)([?#].*)?$/g)){
+					var img = document.createElement('img');
+					img.style = 'max-width:100%;';
+					img.src = url;
+
+					link.innerText = "";
+					link.appendChild(img);
+				}
+
+				return link.outerHTML;
+			});
+
+			if (typeof Emic !== 'undefined') {
+				text = Emic.replace(text);
 			}
 
-			return '<a href="' + link + '" target="_blank">' + link + '</a>';
-		});
+			el.innerHTML = text;
+		}
 
-		return Emic.replace(new_text);
+		if(typeof msg.type !== 'undefined'){
+			// Image
+			if(msg.type.match(/image.*/)){
+				var img = document.createElement('img');
+				img.style = 'max-width:100%;';
+				img.src = msg.url;
+				el.appendChild(img);
+				return;
+			}
+
+			// Audio / Video
+			if(m = msg.type.match(/(audio|video).*/)){
+				var audio = document.createElement(m[1]);
+				audio.controls = 'controls';
+
+				var source = document.createElement("source");
+				source.src = msg.url;
+				source.type = msg.type;
+				audio.appendChild(source);
+
+				el.appendChild(audio);
+				return;
+			}
+
+			// Default
+			var link = document.createElement('a');
+			link.href = msg.url;
+			link.download = msg.name;
+			link.innerText = msg.name;
+			el.appendChild(link);
+		}
 	},
 
 	force_login: function(fail){
@@ -294,11 +357,11 @@ var Chat = {
 
 		// Load all users
 		start: function(r){
-			Chat.users.innerHTML = '';
+			Chat.users.innerText = '';
 
 			for(var user in r.users){
 				var nick = document.createElement('li');
-				nick.innerHTML = r.users[user];
+				nick.innerText = r.users[user];
 				Chat.users.appendChild(nick);
 				Chat.user.objects[r.users[user]] = nick;
 			}
@@ -309,7 +372,7 @@ var Chat = {
 			console.log("User " + r.nick + " joined.");
 
 			var nick = document.createElement('li');
-			nick.innerHTML = r.nick;
+			nick.innerText = r.nick;
 			Chat.users.appendChild(nick);
 			Chat.user.objects[r.nick] = nick;
 		},
@@ -336,9 +399,9 @@ var Chat = {
 		Chat.is_online = true;
 
 		document.getElementById('offline').style.display = "none";
-		Chat.msgs_list.innerHTML = '';
-		Chat.typing_list.innerHTML = '';
-		Chat.users.innerHTML = '';
+		Chat.msgs_list.innerText = '';
+		Chat.typing_list.innerText = '';
+		Chat.users.innerText = '';
 		Chat.last_sent_nick = '';
 
 		// force user to login
@@ -351,9 +414,9 @@ var Chat = {
 		Chat.is_online = false;
 
 		document.getElementById('offline').style.display = "block";
-		Chat.msgs_list.innerHTML = '';
-		Chat.typing_list.innerHTML = '';
-		Chat.users.innerHTML = '';
+		Chat.msgs_list.innerText = '';
+		Chat.typing_list.innerText = '';
+		Chat.users.innerText = '';
 	},
 
 	init: function(){
@@ -440,7 +503,7 @@ var Chat = {
 			e.preventDefault();
 
 			var files = e.dataTransfer.files; // Array of all files
-			for(var i = 0, file; files[i]; i++){
+			for(var i = 0; i < files.length; i++){
 				var file = files[i];
 
 				// Max 10 MB
@@ -450,29 +513,16 @@ var Chat = {
 				}
 
 				var reader = new FileReader();
-				reader.onload = (function(file){ return function(e2){
-					// Image
-					if(file.type.match(/image.*/)){
-						Chat.send_msg('<img src="' + e2.target.result + '" style="max-width:100%;">');
-						return;
-					}
-
-					// Audio
-					if(file.type.match(/audio.*/)){
-						Chat.send_msg('<audio controls><source src="' + e2.target.result + '" type="' + file.type + '"></audio>');
-						return;
-					}
-
-					// Video
-					if(file.type.match(/video.*/)){
-						Chat.send_msg('<video controls><source src="' + e2.target.result + '" type="' + file.type + '"></video>');
-						return;
-					}
-
-					// Default
-					Chat.send_msg('<a href="' + e2.target.result + '" download="' + file.name + '">' + file.name + '</a>');
-				}; })(file);
-				reader.readAsDataURL(file); // start reading the file data.
+				reader.onload = (function(file){
+					return function(e){
+						Chat.send_msg({
+							type: file.type,
+							name: file.name,
+							url: e.target.result
+						});
+					};
+				})(file);
+				reader.readAsDataURL(file);
 			}
 		});
 	}
