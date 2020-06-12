@@ -10,24 +10,28 @@ Where simplicity meets usability:
 * Files sharing is possible - without storing any data on server.
 * Emojis - just a few of them.
 
-![screenshot](screenshot.png)
+![screenshot](https://raw.githubusercontent.com/m1k1o/chat/master/screenshot.png)
 
-## Run using Docker
+## docker
 
-**Build docker image**
-
-```
-docker build -t m1k1o/chat:latest .
-```
-
-**Run docker container**
-
-```
+```sh
 docker run -d \
 	--name chat \
 	-p 80:80 \
 	m1k1o/chat:latest
 ```
+
+## docker-compose
+
+```yml
+version: "3"
+services:
+  chat:
+    image: m1k1o/chat:latest
+    restart: unless-stopped
+    ports:
+      - 80:80
+ ```
 
 ## How to install
 
