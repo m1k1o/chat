@@ -30,8 +30,11 @@
 	<script type="text/javascript" src="static/scripts/emic.js"></script>
 	<script type="text/javascript" src="static/scripts/chat.js"></script>
 	<script type="text/javascript">
+		// optionally set own server where the client connects to
+		const socket = io(location.protocol + '//' + location.host, { path: location.pathname.replace(/\/$/, '') + '/socket.io/' })
+
 		Emic.init();
-		Chat.init();
+		Chat.init(socket);
 	</script>
 </body>
 </html>

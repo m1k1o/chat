@@ -419,12 +419,12 @@ var Chat = {
 		Chat.users.innerText = '';
 	},
 
-	init: function(){
+	init: function(socket){
 		// Set green favicon
 		Chat.notif.favicon('red');
 
 		// Connect to socket.io
-		Chat.socket = io();
+		Chat.socket = socket || io();
 
 		// Create beep object
 		Chat.notif.beep = Chat.notif.beep_create();
