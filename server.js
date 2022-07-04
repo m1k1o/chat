@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
-app.use(express.static(__dirname))
+
+const path = require('path')
+const html = path.join(__dirname, '/html');
+app.use(express.static(html))
 
 const port = process.argv[2] || 8090;
 const http = require("http").Server(app)
