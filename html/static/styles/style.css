@@ -27,15 +27,15 @@ a {
 
 .chat{
 	padding: 0 10px;
-	/*margin-bottom: 150px;*/
-	margin-bottom: 90px;
+	/*padding-bottom: 150px;*/
+	padding-bottom: 90px;
 	overflow: hidden;
 }
 
 .msgs {
 	margin: 0;
 	padding: 0;
-	padding-bottom: 45px;
+	padding-bottom: 5px;
 }
 
 .msgs li {
