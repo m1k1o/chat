@@ -16,8 +16,8 @@ var Chat = {
 	original_title: document.title,
 	new_title: "New messages...",
 
-	scroll: function(){
-		setTimeout(function(){
+	scroll: function () {
+		setTimeout(function () {
 			window.scrollTo(0, document.body.scrollHeight);
 		}, 0)
 	},
@@ -25,7 +25,7 @@ var Chat = {
 	notif: {
 		enabled: true,
 
-		toggle: function(){
+		toggle: function () {
 			return Chat.notif.enabled = !Chat.notif.enabled;
 		},
 
@@ -37,7 +37,7 @@ var Chat = {
 
 		// Beep notification
 		beep: undefined,
-		beep_create: function() {
+		beep_create: function () {
 			var audiotypes = {
 				"mp3": "audio/mpeg",
 				"mp4": "audio/mp4",
@@ -50,18 +50,18 @@ var Chat = {
 			];
 
 			var audio_element = document.createElement('audio');
-			if(audio_element.canPlayType){
-				for(var i=0; i < audios.length; i++){
+			if (audio_element.canPlayType) {
+				for (var i = 0; i < audios.length; i++) {
 					var source_element = document.createElement('source');
 					source_element.setAttribute('src', audios[i]);
-					if(audios[i].match(/\.(\w+)$/i)){
+					if (audios[i].match(/\.(\w+)$/i)) {
 						source_element.setAttribute('type', audiotypes[RegExp.$1]);
 					}
 					audio_element.appendChild(source_element);
 				}
 
 				audio_element.load();
-				audio_element.playclip = function(){
+				audio_element.playclip = function () {
 					audio_element.pause();
 					audio_element.volume = 0.5;
 					audio_element.currentTime = 0;
@@ -73,10 +73,10 @@ var Chat = {
 		},
 
 		// Create new notification
-		create: function(from, message){
+		create: function (from, message) {
 			// If is focused, no notification
-			if(Chat.is_focused || !Chat.notif.enabled){
-				return ;
+			if (Chat.is_focused || !Chat.notif.enabled) {
+				return;
 			}
 
 			// Increase number in title
@@ -86,9 +86,9 @@ var Chat = {
 			Chat.notif.favicon('blue');
 			document.title = '(' + Chat.notif.msgs + ') ' + Chat.new_title;
 
-			if(typeof Chat.notif.ttout === "undefined"){
-				Chat.notif.ttout = setInterval(function(){
-					if(document.title == Chat.original_title){
+			if (typeof Chat.notif.ttout === "undefined") {
+				Chat.notif.ttout = setInterval(function () {
+					if (document.title == Chat.original_title) {
 						Chat.notif.favicon('blue');
 						document.title = '(' + Chat.notif.msgs + ') ' + Chat.new_title;
 					} else {
@@ -102,17 +102,17 @@ var Chat = {
 			Chat.notif.beep.playclip();
 
 			// If are'nt allowed notifications
-			if(Notification.permission !== "granted"){
+			if (Notification.permission !== "granted") {
 				Notification.requestPermission();
-				return ;
+				return;
 			}
 
 			// Clear notification
 			Chat.notif.clear();
 
 			// Stip tags
-			from = from.replace(/(<([^>]+)>)/ig,"");
-			message = message.replace(/(<([^>]+)>)/ig,"");
+			from = from.replace(/(<([^>]+)>)/ig, "");
+			message = message.replace(/(<([^>]+)>)/ig, "");
 
 			// Create new notification
 			Chat.notif.active = new Notification(from, {
@@ -122,18 +122,18 @@ var Chat = {
 			});
 
 			// On click, focus this window
-			Chat.notif.active.onclick = function(){
+			Chat.notif.active.onclick = function () {
 				parent.focus();
 				window.focus();
 			};
 		},
 
 		// Clear notification
-		clear: function(){
+		clear: function () {
 			typeof Chat.notif.active === "undefined" || Chat.notif.active.close();
 		},
 
-		favicon: function(color){
+		favicon: function (color) {
 			var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
 			link.type = 'image/x-icon';
 			link.rel = 'shortcut icon';
@@ -142,15 +142,15 @@ var Chat = {
 		}
 	},
 
-	send_msg: function(text){
+	send_msg: function (text) {
 		Chat.socket.emit("send-msg", {
 			m: text
 		});
 	},
 
-	send_event: function(){
+	send_event: function () {
 		var value = Chat.textarea.value.trim();
-		if(value == "") return ;
+		if (value == "") return;
 
 		console.log("Send message.");
 
@@ -164,7 +164,7 @@ var Chat = {
 	typing: {
 		objects: {},
 
-		create: function(nick){
+		create: function (nick) {
 			var li = document.createElement('li');
 
 			var prefix = document.createElement('span');
@@ -190,34 +190,34 @@ var Chat = {
 			Chat.scroll();
 		},
 
-		remove: function(nick){
-			if(Chat.typing.objects.hasOwnProperty(nick)){
+		remove: function (nick) {
+			if (Chat.typing.objects.hasOwnProperty(nick)) {
 				var element = Chat.typing.objects[nick];
 				element.parentNode.removeChild(element);
 				delete Chat.typing.objects[nick];
 			}
 		},
 
-		event: function(r){
-			if(r.status){
+		event: function (r) {
+			if (r.status) {
 				Chat.typing.create(r.nick);
 			} else {
 				Chat.typing.remove(r.nick);
 			}
 		},
 
-		update: function(){
-			if(Chat.is_typing && Chat.textarea.value === ""){
+		update: function () {
+			if (Chat.is_typing && Chat.textarea.value === "") {
 				Chat.socket.emit("typing", Chat.is_typing = false);
 			}
 
-			if(!Chat.is_typing && Chat.textarea.value !== ""){
+			if (!Chat.is_typing && Chat.textarea.value !== "") {
 				Chat.socket.emit("typing", Chat.is_typing = true);
 			}
 		}
 	},
 
-	new_msg: function(r){
+	new_msg: function (r) {
 		console.log("New message.");
 
 		// Notify user
@@ -231,7 +231,7 @@ var Chat = {
 		prefix.innerText = r.f;
 		li.appendChild(prefix);
 
-		if(Chat.last_sent_nick === r.f){
+		if (Chat.last_sent_nick === r.f) {
 			prefix.style.display = "none";
 			li.prefix = prefix;
 		} else {
@@ -258,17 +258,17 @@ var Chat = {
 		Chat.scroll();
 	},
 
-	append_msg: function(el, msg){
-		if(!msg) return ;
+	append_msg: function (el, msg) {
+		if (!msg) return;
 
 		// If is object
-		if(typeof msg.text !== 'undefined'){
+		if (typeof msg.text !== 'undefined') {
 			// Escape HTML
 			el.innerText = msg.text;
 			var text = el.innerHTML;
 
 			// Parse urls
-			text = text.replace(/(https?:\/\/[^\s]+)/g, function(url, a, b) {
+			text = text.replace(/(https?:\/\/[^\s]+)/g, function (url, a, b) {
 				var link = document.createElement('a');
 				link.target = "_blank";
 
@@ -278,7 +278,7 @@ var Chat = {
 				link.href = url;
 
 				// If link is image
-				if(url.match(/.(png|jpe?g|gifv?)([?#].*)?$/g)){
+				if (url.match(/.(png|jpe?g|gifv?)([?#].*)?$/g)) {
 					var img = document.createElement('img');
 					img.style = 'max-width:100%;';
 					img.src = url;
@@ -297,9 +297,9 @@ var Chat = {
 			el.innerHTML = text;
 		}
 
-		if(typeof msg.type !== 'undefined'){
+		if (typeof msg.type !== 'undefined') {
 			// Image
-			if(msg.type.match(/image.*/)){
+			if (msg.type.match(/image.*/)) {
 				var img = document.createElement('img');
 				img.style = 'max-width:100%;';
 				img.src = msg.url;
@@ -308,7 +308,7 @@ var Chat = {
 			}
 
 			// Audio / Video
-			if(m = msg.type.match(/(audio|video).*/)){
+			if (m = msg.type.match(/(audio|video).*/)) {
 				var audio = document.createElement(m[1]);
 				audio.controls = 'controls';
 
@@ -330,13 +330,13 @@ var Chat = {
 		}
 	},
 
-	force_login: function(fail){
-		if(typeof fail !== "undefined"){
+	force_login: function (fail) {
+		if (typeof fail !== "undefined") {
 			alert(fail);
 		}
 
 		var nick = prompt("Your nick:", localStorage.nick || "");
-		if(typeof nick !== "undefined" && nick){
+		if (typeof nick !== "undefined" && nick) {
 			localStorage.nick = nick;
 			Chat.socket.emit("login", {
 				nick: nick
@@ -344,8 +344,8 @@ var Chat = {
 		}
 	},
 
-	reload: function(){
-		if(typeof localStorage.nick !== "undefined" && localStorage.nick){
+	reload: function () {
+		if (typeof localStorage.nick !== "undefined" && localStorage.nick) {
 			Chat.socket.emit("login", {
 				nick: localStorage.nick
 			});
@@ -356,10 +356,10 @@ var Chat = {
 		objects: {},
 
 		// Load all users
-		start: function(r){
+		start: function (r) {
 			Chat.users.innerText = '';
 
-			for(var user in r.users){
+			for (var user in r.users) {
 				var nick = document.createElement('li');
 				nick.innerText = r.users[user];
 				Chat.users.appendChild(nick);
@@ -367,8 +367,16 @@ var Chat = {
 			}
 		},
 
+		previous_messages: function (data) {
+			console.log(`msgs: ${data}`)
+
+			data.msgs.forEach(element => {
+				Chat.new_msg(element)
+			});
+		},
+
 		// User joined room
-		enter: function(r){
+		enter: function (r) {
 			console.log("User " + r.nick + " joined.");
 
 			var nick = document.createElement('li');
@@ -378,14 +386,14 @@ var Chat = {
 		},
 
 		// User left room
-		leave: function(r){
+		leave: function (r) {
 			console.log("User " + r.nick + " left.");
 
 			// Is not typing
 			Chat.typing.remove(r.nick);
 
 			// Remove user
-			if(Chat.user.objects.hasOwnProperty(r.nick)){
+			if (Chat.user.objects.hasOwnProperty(r.nick)) {
 				var element = Chat.user.objects[r.nick];
 				element.parentNode.removeChild(element);
 				delete Chat.user.objects[r.nick];
@@ -393,7 +401,7 @@ var Chat = {
 		}
 	},
 
-	connect: function(){
+	connect: function () {
 		// Set green favicon
 		Chat.notif.favicon('green');
 		Chat.is_online = true;
@@ -408,7 +416,7 @@ var Chat = {
 		Chat.force_login();
 	},
 
-	disconnect: function(){
+	disconnect: function () {
 		// Set green favicon
 		Chat.notif.favicon('red');
 		Chat.is_online = false;
@@ -419,7 +427,7 @@ var Chat = {
 		Chat.users.innerText = '';
 	},
 
-	init: function(socket){
+	init: function (socket) {
 		// Set green favicon
 		Chat.notif.favicon('red');
 
@@ -430,12 +438,12 @@ var Chat = {
 		Chat.notif.beep = Chat.notif.beep_create();
 
 		// On focus
-		window.addEventListener('focus', function() {
+		window.addEventListener('focus', function () {
 			Chat.is_focused = true;
 
 			// If chat is not online, dont care.
-			if(!Chat.is_online){
-				return ;
+			if (!Chat.is_online) {
+				return;
 			}
 
 			// Clear ttout, if there was
@@ -452,7 +460,7 @@ var Chat = {
 		});
 
 		// On blur
-		window.addEventListener('blur', function() {
+		window.addEventListener('blur', function () {
 			Chat.is_focused = false;
 		});
 
@@ -460,7 +468,7 @@ var Chat = {
 		Chat.send_btn.onclick = Chat.send_event;
 
 		// On enter send message
-		Chat.textarea.onkeydown = function(e){
+		Chat.textarea.onkeydown = function (e) {
 			var key = e.keyCode || window.event.keyCode;
 
 			// If the user has pressed enter
@@ -483,6 +491,7 @@ var Chat = {
 		Chat.socket.on("typing", Chat.typing.event);
 		Chat.socket.on("new-msg", Chat.new_msg);
 
+		Chat.socket.on("previous-msg", Chat.user.previous_messages)
 		Chat.socket.on("start", Chat.user.start);
 		Chat.socket.on("ue", Chat.user.enter);
 		Chat.socket.on("ul", Chat.user.leave);
@@ -490,7 +499,7 @@ var Chat = {
 		var dropZone = document.getElementsByTagName("body")[0];
 
 		// Optional. Show the copy icon when dragging over. Seems to only work for chrome.
-		dropZone.addEventListener('dragover', function(e) {
+		dropZone.addEventListener('dragover', function (e) {
 			e.stopPropagation();
 			e.preventDefault();
 
@@ -498,23 +507,23 @@ var Chat = {
 		});
 
 		// Get file data on drop
-		dropZone.addEventListener('drop', function(e) {
+		dropZone.addEventListener('drop', function (e) {
 			e.stopPropagation();
 			e.preventDefault();
 
 			var files = e.dataTransfer.files; // Array of all files
-			for(var i = 0; i < files.length; i++){
+			for (var i = 0; i < files.length; i++) {
 				var file = files[i];
 
 				// Max 10 MB
-				if(file.size > 10485760){
+				if (file.size > 10485760) {
 					alert("Max size of file is 10MB");
-					return ;
+					return;
 				}
 
 				var reader = new FileReader();
-				reader.onload = (function(file){
-					return function(e){
+				reader.onload = (function (file) {
+					return function (e) {
 						Chat.send_msg({
 							type: file.type,
 							name: file.name,
