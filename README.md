@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
     ports:
       - 80:80
-	environment:
+    environment:
       CACHE_SIZE: 50 # optional: message count stored. Defaults to zero.
  ```
 
