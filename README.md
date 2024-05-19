@@ -4,7 +4,7 @@ Simple plug & play real-time JavaScript chat implemented using Socket.io.
 Where simplicity meets usability:
 
 * No user accounts - just enter nickname and join.
-* No history saved - only logged-in users can see recent history.
+* No history saved by default - only logged-in users can see recent history.
 * No configuration.
 * Only one room - you can't create any other rooms or write PM to others.
 * Files sharing is possible - without storing any data on server.
@@ -31,7 +31,16 @@ services:
     restart: unless-stopped
     ports:
       - 80:80
+	environment:
+      CACHE_SIZE: 50 # optional: message count stored. Defaults to zero.
  ```
+
+## Cache
+`CACHE_SIZE` is optional and determines the number of messages stored on the server. When new users join (or reconnect), that cache is sent to give a brief history. This defaults to zero, but can be set as an environment variable.
+
+If you're not running in a docker container, you can make a `.env` file in the project root with `CACHE_SIZE=50` in.
+
+Note: This cache will be text or images so be mindful not to set it too high as it could be n images sent to every new user.
 
 ## How to install
 
