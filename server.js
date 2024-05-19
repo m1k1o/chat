@@ -13,30 +13,30 @@ let messageCache = [];
 // default cache size to zero. override in environment
 let cache_size = process.env.CACHE_SIZE ?? 0
 
-http.listen(port, function() {
+http.listen(port, function(){
 	console.log("Starting server on port %s", port);
 });
 
 const users = [];
 let msg_id = 1;
-io.sockets.on("connection", function(socket) {
+io.sockets.on("connection", function(socket){
 	console.log("New connection!");
 
 	var nick = null;
 
-	socket.on("login", function(data) {
+	socket.on("login", function(data){
 		// Security checks
 		data.nick = data.nick.trim();
 
 		// If is empty
-		if(data.nick == "") {
+		if(data.nick == ""){
 			socket.emit("force-login", "Nick can't be empty.");
 			nick = null;
 			return;
 		}
 
 		// If is already in
-		if(users.indexOf(data.nick) != -1) {
+		if(users.indexOf(data.nick) != -1){
 			socket.emit("force-login", "This nick is already in chat.");
 			nick = null;
 			return;
@@ -66,9 +66,9 @@ io.sockets.on("connection", function(socket) {
 		});
 	});
 
-	socket.on("send-msg", function(data) {
+	socket.on("send-msg", function(data){
 		// If is logged in
-		if(nick == null) {
+		if(nick == null){
 			socket.emit("force-login", "You need to be logged in to send message.");
 			return;
 		}
@@ -80,7 +80,7 @@ io.sockets.on("connection", function(socket) {
 		}
 
 		messageCache.push(msg);
-		if(messageCache.length > cache_size) {
+		if(messageCache.length > cache_size){
 			messageCache.shift(); // Remove the oldest message
 		}
 
@@ -90,9 +90,9 @@ io.sockets.on("connection", function(socket) {
 		console.log("User %s sent message.", nick.replace(/(<([^>]+)>)/ig, ""));
 	});
 
-	socket.on("typing", function(typing) {
+	socket.on("typing", function(typing){
 		// Only logged in users
-		if(nick != null) {
+		if(nick != null){
 			socket.broadcast.to("main").emit("typing", {
 				status: typing,
 				nick: nick
@@ -102,10 +102,10 @@ io.sockets.on("connection", function(socket) {
 		}
 	});
 
-	socket.on("disconnect", function() {
+	socket.on("disconnect", function(){
 		console.log("Got disconnect!");
 
-		if(nick != null) {
+		if(nick != null){
 			// Remove user from users
 			users.splice(users.indexOf(nick), 1);
 

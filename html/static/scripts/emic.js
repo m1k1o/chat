@@ -1,11 +1,11 @@
-HTMLTextAreaElement.prototype.insertAtCaret = function(text) {
+HTMLTextAreaElement.prototype.insertAtCaret = function(text){
 	text = text || '';
-	if(document.selection) {
+	if(document.selection){
 		// IE
 		this.focus();
 		var sel = document.selection.createRange();
 		sel.text = text;
-	} else if(this.selectionStart || this.selectionStart === 0) {
+	} else if(this.selectionStart || this.selectionStart === 0){
 		// Others
 		var startPos = this.selectionStart;
 		var endPos = this.selectionEnd;
@@ -128,7 +128,7 @@ var Emic = {
 		"banana": "Banana"
 	},
 
-	replace: function(str) {
+	replace: function(str){
 		str = ' ' + str;
 
 		str = str.replace(/\*dog\*/g, '<img src="static/images/dog.png" width="128px" height="128px" style="vertical-align:middle;">');
@@ -172,25 +172,25 @@ var Emic = {
 		return str;
 	},
 
-	init: function() {
-		for(var slug in Emic.db) {
+	init: function(){
+		for(var slug in Emic.db){
 			var obj = document.createElement('li');
 			obj.innerHTML = '<img src="static/emic/' + slug + '.png" width="28px" height="28px" style="vertical-align:middle;">';
 			obj.dataset.slug = slug;
-			obj.onclick = function() {
+			obj.onclick = function(){
 				Emic.textarea.insertAtCaret(' *' + this.dataset.slug + '* ');
 				Emic.textarea.focus();
 			};
 
-			Emic.container.onmousedown = function(e) {
+			Emic.container.onmousedown = function(e){
 				e.preventDefault();
 			};
 			Emic.container.appendChild(obj);
 		}
 
 		var toggle = Emic.container.style.display;
-		Emic.emic_btn.onclick = function() {
-			if(toggle == "none") {
+		Emic.emic_btn.onclick = function(){
+			if(toggle == "none"){
 				Emic.container.style.display = "inline-block";
 				toggle = "block";
 			} else {
