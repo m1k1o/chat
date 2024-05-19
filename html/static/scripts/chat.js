@@ -2,6 +2,7 @@ var Chat = {
 	socket: null,
 
 	loading: document.getElementById("loading"),
+	chat_box: document.getElementById("chat-box"),
 	msgs_list: document.getElementById("msgs"),
 	typing_list: document.getElementById("typing"),
 	users: document.getElementById("users"),
@@ -18,7 +19,7 @@ var Chat = {
 
 	scroll: function(){
 		setTimeout(function(){
-			window.scrollTo(0, document.body.scrollHeight);
+			Chat.chat_box.scrollTop = Chat.chat_box.scrollHeight;
 		}, 0)
 	},
 
@@ -252,7 +253,8 @@ var Chat = {
 		var c = document.createElement('li');
 		c.appendChild(li);
 
-		Chat.msgs_list.appendChild(c);
+		// Prepend because flex-direction: column-reverse
+		Chat.msgs_list.prepend(c);
 
 		// Scroll to new message
 		Chat.scroll();
