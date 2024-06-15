@@ -18,7 +18,7 @@ Where simplicity meets usability:
 docker run -d \
 	--name chat \
 	-p 80:80 \
-	m1k1o/chat:latest
+	drjkarl/chat:latest
 ```
 
 ## docker-compose
@@ -27,7 +27,7 @@ docker run -d \
 version: "3"
 services:
   chat:
-    image: m1k1o/chat:latest
+    image: drjkarl/chat:latest
     restart: unless-stopped
     ports:
       - 80:80
@@ -47,7 +47,7 @@ Note: This cache will be text or images so be mindful not to set it too high as 
 Requirements: `nodejs`, `npm`
 
 1. Clone this repository.
-	- `git clone https://github.com/m1k1o/chat .`
+	- `git clone https://github.com/drjkarl/chat .`
 2. Install server dependencies.
 	- `npm install`
 3. Run server (default port is `80`).
