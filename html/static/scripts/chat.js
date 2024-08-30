@@ -2,6 +2,7 @@ var Chat = {
 	socket: null,
 
 	loading: document.getElementById("loading"),
+	chat_box: document.getElementById("chat-box"),
 	msgs_list: document.getElementById("msgs"),
 	typing_list: document.getElementById("typing"),
 	users: document.getElementById("users"),
@@ -18,7 +19,7 @@ var Chat = {
 
 	scroll: function(){
 		setTimeout(function(){
-			window.scrollTo(0, document.body.scrollHeight);
+			Chat.chat_box.scrollTop = Chat.chat_box.scrollHeight;
 		}, 0)
 	},
 
@@ -37,7 +38,7 @@ var Chat = {
 
 		// Beep notification
 		beep: undefined,
-		beep_create: function() {
+		beep_create: function(){
 			var audiotypes = {
 				"mp3": "audio/mpeg",
 				"mp4": "audio/mp4",
@@ -51,7 +52,7 @@ var Chat = {
 
 			var audio_element = document.createElement('audio');
 			if(audio_element.canPlayType){
-				for(var i=0; i < audios.length; i++){
+				for(var i = 0;i < audios.length;i++){
 					var source_element = document.createElement('source');
 					source_element.setAttribute('src', audios[i]);
 					if(audios[i].match(/\.(\w+)$/i)){
@@ -76,7 +77,7 @@ var Chat = {
 		create: function(from, message){
 			// If is focused, no notification
 			if(Chat.is_focused || !Chat.notif.enabled){
-				return ;
+				return;
 			}
 
 			// Increase number in title
@@ -104,15 +105,15 @@ var Chat = {
 			// If are'nt allowed notifications
 			if(Notification.permission !== "granted"){
 				Notification.requestPermission();
-				return ;
+				return;
 			}
 
 			// Clear notification
 			Chat.notif.clear();
 
 			// Stip tags
-			from = from.replace(/(<([^>]+)>)/ig,"");
-			message = message.replace(/(<([^>]+)>)/ig,"");
+			from = from.replace(/(<([^>]+)>)/ig, "");
+			message = message.replace(/(<([^>]+)>)/ig, "");
 
 			// Create new notification
 			Chat.notif.active = new Notification(from, {
@@ -150,11 +151,11 @@ var Chat = {
 
 	send_event: function(){
 		var value = Chat.textarea.value.trim();
-		if(value == "") return ;
+		if(value == "") return;
 
 		console.log("Send message.");
 
-		Chat.send_msg({ text: value });
+		Chat.send_msg({text: value});
 
 		Chat.textarea.value = '';
 		Chat.typing.update();
@@ -252,14 +253,15 @@ var Chat = {
 		var c = document.createElement('li');
 		c.appendChild(li);
 
-		Chat.msgs_list.appendChild(c);
+		// Prepend because flex-direction: column-reverse
+		Chat.msgs_list.prepend(c);
 
 		// Scroll to new message
 		Chat.scroll();
 	},
 
 	append_msg: function(el, msg){
-		if(!msg) return ;
+		if(!msg) return;
 
 		// If is object
 		if(typeof msg.text !== 'undefined'){
@@ -268,7 +270,7 @@ var Chat = {
 			var text = el.innerHTML;
 
 			// Parse urls
-			text = text.replace(/(https?:\/\/[^\s]+)/g, function(url, a, b) {
+			text = text.replace(/(https?:\/\/[^\s]+)/g, function(url, a, b){
 				var link = document.createElement('a');
 				link.target = "_blank";
 
@@ -290,7 +292,7 @@ var Chat = {
 				return link.outerHTML;
 			});
 
-			if (typeof Emic !== 'undefined') {
+			if(typeof Emic !== 'undefined'){
 				text = Emic.replace(text);
 			}
 
@@ -367,6 +369,14 @@ var Chat = {
 			}
 		},
 
+		previous_messages: function(data){
+			console.log(`msgs: ${data}`)
+
+			data.msgs.forEach(element => {
+				Chat.new_msg(element)
+			});
+		},
+
 		// User joined room
 		enter: function(r){
 			console.log("User " + r.nick + " joined.");
@@ -430,12 +440,12 @@ var Chat = {
 		Chat.notif.beep = Chat.notif.beep_create();
 
 		// On focus
-		window.addEventListener('focus', function() {
+		window.addEventListener('focus', function(){
 			Chat.is_focused = true;
 
 			// If chat is not online, dont care.
 			if(!Chat.is_online){
-				return ;
+				return;
 			}
 
 			// Clear ttout, if there was
@@ -452,7 +462,7 @@ var Chat = {
 		});
 
 		// On blur
-		window.addEventListener('blur', function() {
+		window.addEventListener('blur', function(){
 			Chat.is_focused = false;
 		});
 
@@ -464,7 +474,7 @@ var Chat = {
 			var key = e.keyCode || window.event.keyCode;
 
 			// If the user has pressed enter
-			if (key === 13) {
+			if(key === 13){
 				Chat.send_event();
 				return false;
 			}
@@ -483,6 +493,7 @@ var Chat = {
 		Chat.socket.on("typing", Chat.typing.event);
 		Chat.socket.on("new-msg", Chat.new_msg);
 
+		Chat.socket.on("previous-msg", Chat.user.previous_messages)
 		Chat.socket.on("start", Chat.user.start);
 		Chat.socket.on("ue", Chat.user.enter);
 		Chat.socket.on("ul", Chat.user.leave);
@@ -490,7 +501,7 @@ var Chat = {
 		var dropZone = document.getElementsByTagName("body")[0];
 
 		// Optional. Show the copy icon when dragging over. Seems to only work for chrome.
-		dropZone.addEventListener('dragover', function(e) {
+		dropZone.addEventListener('dragover', function(e){
 			e.stopPropagation();
 			e.preventDefault();
 
@@ -498,18 +509,18 @@ var Chat = {
 		});
 
 		// Get file data on drop
-		dropZone.addEventListener('drop', function(e) {
+		dropZone.addEventListener('drop', function(e){
 			e.stopPropagation();
 			e.preventDefault();
 
 			var files = e.dataTransfer.files; // Array of all files
-			for(var i = 0; i < files.length; i++){
+			for(var i = 0;i < files.length;i++){
 				var file = files[i];
 
 				// Max 10 MB
 				if(file.size > 10485760){
 					alert("Max size of file is 10MB");
-					return ;
+					return;
 				}
 
 				var reader = new FileReader();

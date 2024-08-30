@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>Chat</title>
 
-	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
 	<link href="static/styles/style.css" rel="stylesheet" type="text/css">
@@ -12,10 +12,12 @@
 </head>
 <body>
 	<div class="chat">
-		<div id="offline"><span class="big">Server is offline.</span><br />Sorry for that.</div>
-		<ul id="msgs" class="msgs"></ul>
-		<ul id="typing" class="msgs"></ul>
-		<ul id="emic" style="display:none;"></ul>
+		<div id="chat-box" class="chat-box">
+			<div id="offline"><span class="big">Server is offline.</span><br />Sorry for that.</div>
+			<ul id="msgs" class="msgs"></ul>
+			<ul id="typing" class="msgs"></ul>
+			<ul id="emic" style="display:none;"></ul>
+		</div>
 		<div class="chat-form">
 			<button id="emic_btn">
 				<img src="static/emic/white-smiling-face.png" width="20px" height="20px" title="White Smiling Face">
