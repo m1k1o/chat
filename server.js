@@ -6,8 +6,12 @@ const html = path.join(__dirname, '/html');
 app.use(express.static(html))
 
 const port = process.argv[2] || 8090;
-const http = require("http").Server(app)
-const io = require("socket.io")(http);
+const http = require("http").Server(app);
+
+const maxHttpBufferSizeInMb = parseInt(process.env.MAX_HTTP_BUFFER_SIZE_MB);
+const io = require("socket.io")(http, {
+  maxHttpBufferSize: maxHttpBufferSizeInMb * 1024 * 1024,
+});
 
 http.listen(port, function () {
   console.log("Starting server on port %s", port);
