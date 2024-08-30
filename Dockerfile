@@ -13,6 +13,8 @@ RUN npm install
 # copy app
 COPY . .
 
+ENV MAX_HTTP_BUFFER_SIZE_MB=1
+
 ENTRYPOINT [ "node", "server.js" ]
 
 EXPOSE 80

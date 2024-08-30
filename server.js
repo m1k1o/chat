@@ -7,8 +7,12 @@ const html = path.join(__dirname, '/html');
 app.use(express.static(html))
 
 const port = process.argv[2] || 8090;
-const http = require("http").Server(app)
-const io = require("socket.io")(http);
+const http = require("http").Server(app);
+
+const maxHttpBufferSizeInMb = parseInt(process.env.MAX_HTTP_BUFFER_SIZE_MB || '1');
+const io = require("socket.io")(http, {
+  maxHttpBufferSize: maxHttpBufferSizeInMb * 1024 * 1024,
+});
 let messageCache = [];
 // default cache size to zero. override in environment
 let cache_size = process.env.CACHE_SIZE ?? 0
