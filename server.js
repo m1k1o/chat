@@ -8,7 +8,7 @@ app.use(express.static(html))
 const port = process.argv[2] || 8090;
 const http = require("http").Server(app);
 
-const maxHttpBufferSizeInMb = parseInt(process.env.MAX_HTTP_BUFFER_SIZE_MB);
+const maxHttpBufferSizeInMb = parseInt(process.env.MAX_HTTP_BUFFER_SIZE_MB || '1');
 const io = require("socket.io")(http, {
   maxHttpBufferSize: maxHttpBufferSizeInMb * 1024 * 1024,
 });
