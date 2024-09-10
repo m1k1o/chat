@@ -24,7 +24,7 @@
   "homepage": "https://github.com/m1k1o/chat#readme",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "socket.io": "^4.7.5"
   }
 }
