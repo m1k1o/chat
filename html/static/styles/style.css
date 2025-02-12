@@ -53,6 +53,10 @@ a {
 	margin-bottom: 5px;
 }
 
+.message-from-self {
+	margin-left: auto !important;
+}
+
 #typing li {
 	display: inline-block;
 	margin-right: 5px;
