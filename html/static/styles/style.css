@@ -1,5 +1,6 @@
 html, body{
 	height: 100%;
+	scrollbar-color: rgb(127 63 152) rgb(69, 69, 69);
 }
 
 body{
@@ -30,6 +31,9 @@ a {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	max-width: 950px;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 #msgs {
@@ -55,6 +59,7 @@ a {
 
 .message-from-self {
 	margin-left: auto !important;
+	padding: 6px 12px;
 }
 
 #typing li {
