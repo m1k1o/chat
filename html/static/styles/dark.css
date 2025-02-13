@@ -15,6 +15,7 @@ body,
 .chat-form,
 .chat-form .form-control {
 	background: #1f1b1b;
+	scrollbar-color: rgb(127 63 152) rgb(69, 69, 69);
 }
 
 #send,
@@ -25,4 +26,11 @@ body,
 
 #emic_btn{
 	background:#7f3f98;
+}
+
+.chat {
+	border: rgb(127 63 152);
+	border-style: solid;
+	border-top: none;
+	border-bottom: none;
 }
