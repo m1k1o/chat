@@ -54,11 +54,14 @@ a {
 	margin: 0;
 	overflow: hidden;
 	margin-bottom: 5px;
+	display: flex;
 }
 
 .message-from-self {
-	margin-left: auto !important;
 	padding-right: 6px;
+	justify-content: flex-end;
+	text-align: right;
+	display: flex;
 }
 
 #typing li {
@@ -69,6 +72,7 @@ a {
 .msgs li .body {
 	display: block;
 	overflow: hidden;
+	word-wrap: break-word;
 }
 
 .msgs li .message {
@@ -96,7 +100,7 @@ a {
 
 @media only screen and (max-width: 600px){
 	.msgs li .message {
-		max-width: 75%;
+		max-width: 63vw;
 	}
 }
 
