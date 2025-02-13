@@ -244,14 +244,14 @@ a {
 #emic {
 	position: absolute;
 	border: 1px solid #bbb;
-	width: 270px;
+	width: 250px;
 	height: 210px;
 	margin: 0;
 	padding: 0;
 	font-size: 0;
 	overflow: auto;
 	margin-left: auto;
-	bottom: 0px;
+	bottom: 88px;
 	right: 0px;
 }
 
