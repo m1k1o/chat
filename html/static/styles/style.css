@@ -100,7 +100,7 @@ a {
 
 @media only screen and (max-width: 600px){
 	.msgs li .message {
-		max-width: 63vw;
+		max-width: 75vw;
 	}
 }
 
