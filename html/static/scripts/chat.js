@@ -220,6 +220,7 @@ var Chat = {
 
 	new_msg: function(r){
 		console.log("New message.");
+		const fromSelf = localStorage.nick == r.f;
 
 		// Notify user
 		Chat.notif.create(r.f, r.m);
@@ -243,7 +244,7 @@ var Chat = {
 		msg.className = 'message';
 
 		var body = document.createElement('span');
-		body.className = 'body' + (localStorage.nick == r.f ? ' out' : ' in');
+		body.className = 'body' + (fromSelf ? ' out' : ' in');
 		Chat.append_msg(body, r.m);
 
 		msg.appendChild(body);
@@ -252,6 +253,9 @@ var Chat = {
 
 		var c = document.createElement('li');
 		c.appendChild(li);
+		if (fromSelf){
+			c.classList.add('message-from-self');
+		}
 
 		// Prepend because flex-direction: column-reverse
 		Chat.msgs_list.prepend(c);
