@@ -30,6 +30,10 @@ a {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	max-width: 950px;
+	margin-right: auto;
+	margin-left: auto;
+	position: relative;
 }
 
 #msgs {
@@ -51,6 +55,14 @@ a {
 	margin: 0;
 	overflow: hidden;
 	margin-bottom: 5px;
+	display: flex;
+}
+
+.message-from-self {
+	padding-right: 6px;
+	justify-content: flex-end;
+	text-align: right;
+	display: flex;
 }
 
 #typing li {
@@ -61,6 +73,7 @@ a {
 .msgs li .body {
 	display: block;
 	overflow: hidden;
+	word-wrap: break-word;
 }
 
 .msgs li .message {
@@ -88,7 +101,7 @@ a {
 
 @media only screen and (max-width: 600px){
 	.msgs li .message {
-		max-width: 75%;
+		max-width: 75vw;
 	}
 }
 
@@ -229,17 +242,17 @@ a {
 }
 
 #emic {
-	position: fixed;
-	right: 10px;
-	/*bottom: 150px;*/
-	bottom: 90px;
+	position: absolute;
 	border: 1px solid #bbb;
-	width: 270px;
+	width: 250px;
 	height: 210px;
 	margin: 0;
 	padding: 0;
 	font-size: 0;
 	overflow: auto;
+	margin-left: auto;
+	bottom: 88px;
+	right: 0px;
 }
 
 #emic li{
@@ -258,6 +271,7 @@ a {
 	display: flex;
 	flex-direction: column;
 	overflow-y: scroll;
+	position: relative;
 }
 
 .chat-form	{
