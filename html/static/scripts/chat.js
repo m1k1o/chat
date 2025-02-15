@@ -220,7 +220,7 @@ var Chat = {
 
 	new_msg: function(r){
 		console.log("New message.");
-		const fromSelf = localStorage.nick == r.f;
+		const fromSelf = sessionStorage.nick == r.f;
 
 		// Notify user
 		Chat.notif.create(r.f, r.m);
@@ -341,9 +341,9 @@ var Chat = {
 			alert(fail);
 		}
 
-		var nick = prompt("Your nick:", localStorage.nick || "");
+		var nick = prompt("Your nick:", sessionStorage.nick || localStorage.nick || "");
 		if(typeof nick !== "undefined" && nick){
-			localStorage.nick = nick;
+			sessionStorage.nick = localStorage.nick = nick;
 			Chat.socket.emit("login", {
 				nick: nick
 			});
@@ -351,9 +351,9 @@ var Chat = {
 	},
 
 	reload: function(){
-		if(typeof localStorage.nick !== "undefined" && localStorage.nick){
+		if(typeof sessionStorage.nick !== "undefined" && sessionStorage.nick){
 			Chat.socket.emit("login", {
-				nick: localStorage.nick
+				nick: sessionStorage.nick
 			});
 		}
 	},
