@@ -111,9 +111,9 @@ var Chat = {
 			// Clear notification
 			Chat.notif.clear();
 
-			// Stip tags
+			// Strip tags
 			from = from.replace(/(<([^>]+)>)/ig, "");
-			message = message.replace(/(<([^>]+)>)/ig, "");
+			message = message.text?.replace(/(<([^>]+)>)/ig, "");
 
 			// Create new notification
 			Chat.notif.active = new Notification(from, {
