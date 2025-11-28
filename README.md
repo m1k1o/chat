@@ -1,4 +1,5 @@
 # chat
+
 Simple plug & play real-time JavaScript chat implemented using Socket.io.
 
 Where simplicity meets usability:
@@ -24,7 +25,6 @@ docker run -d \
 ## docker-compose
 
 ```yml
-version: "3"
 services:
   chat:
     image: m1k1o/chat:latest
@@ -33,9 +33,16 @@ services:
       - 80:80
     environment:
       CACHE_SIZE: 50 # optional: message count stored. Defaults to zero.
+    healthcheck:
+      interval: 60s
+      retries: 10
+      test: ["CMD", "curl", "http://localhost"]
+      start_period: 5s
+      timeout: 10s
  ```
 
 ## Cache
+
 `CACHE_SIZE` is optional and determines the number of messages stored on the server. When new users join (or reconnect), that cache is sent to give a brief history. This defaults to zero, but can be set as an environment variable.
 
 If you're not running in a docker container, you can make a `.env` file in the project root with `CACHE_SIZE=50` in.
