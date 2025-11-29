@@ -1,4 +1,4 @@
-FROM node:trixie-slim
+FROM node:20-bookworm-slim
 
 #
 # install packages
@@ -25,3 +25,4 @@ ENTRYPOINT [ "node", "server.js" ]
 
 EXPOSE 80
 CMD [ "80" ]
+
